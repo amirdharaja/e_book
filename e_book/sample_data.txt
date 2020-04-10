@@ -1,0 +1,19 @@
+------------------------ For Register -----------------------
+
+{
+	"first_name":"Amirdharajan",
+	"gender":"male",
+	"password":"test1",
+	"confirm_password":"test1",
+	"email":"test1@gmail.com",
+	"phone_number":"1234567890",
+	"pincode":"641002",
+	"temporary_address":"Coimbatore"
+}
+
+-------------------------- For Login --------------------------
+
+{
+    "username":"test1@gmail.com",
+    "password":"1"
+}

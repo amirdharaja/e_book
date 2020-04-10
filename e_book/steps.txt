@@ -1,0 +1,21 @@
+﻿If you want run this application from your machine, please execute the following 7 steps.
+
+	Step 1 : Download & Install MySQL Server
+
+	Step 2 : Download & Install Python3
+
+	Step 3 : Clone the project from the GitHub
+
+	Step 4 : Ensure “.env” file in your cloned project folder
+
+	Step 5 : Ensure “requirements.txt” file in your cloned project folder
+
+	Step 6 : Create new database in your MySQL named “book_service”
+		(Recommend:  Download HEIDISQL to manage your MySQL server in User Friendly from the following link)
+		https://www.heidisql.com/download.php
+
+	Step 7 : Run the following command from your cloned project folder
+		pip install -r requirements.txt
+		python manage.py makemigrations
+		python manage.py migrate   
+		python manage.py runserver
