@@ -1,2 +1,5 @@
-# e_book
-A REST API service which will: -Authenticate user with JWT tokens -Perform CRUD operations for a user’s list of favorite books.  Each book will have the following fields - title, amazon_url, author, genre -Check for expired token and re-authenticate
+# E-BOOK Developed by Amirdharajan
+
+* This is a REST application which made the CRUD operation, JWT token authorization (Token valid upto 3 days from the login) etc and It is help for manage e_book application
+
+* Each book having the following example fields - title, amazon_url, author, genre(type)
