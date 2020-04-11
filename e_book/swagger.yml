@@ -1,0 +1,836 @@
+openapi: 3.0.0
+servers:
+  - description: Development API
+    url: 'localhost:8000/'
+info:
+  description: The endpoint for API endpoints.
+  version: "1.0.0"
+  title: E-Book - API
+  contact:
+    name: Support
+    email: amirdharajan@yahpp.com
+tags:
+  - name: Common
+  - name: User
+  - name: Author
+  - name: Admin
+
+paths:
+  /register:
+    post:
+      tags:
+        - Common
+      summary: Register
+      description: Creates new user 
+      responses:
+        '201':
+          description: Creates new user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: New user successfully created
+                  meta:
+                    type: object
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - first_name
+                - email
+                - password
+                - role
+                - gender
+                - phone_number
+                - temporary_address
+                - pincode
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                role:
+                  type: string
+                  enum: [user, author, admin]
+                gender:
+                  type: string
+                  enum: [male, female, other]
+                phone_number:
+                  type: string
+                permanent_address:
+                  type: string
+                temporary_address:
+                  type: string
+                pincode:
+                  type: string
+                
+        required: true
+
+  /login:
+    post:
+      tags:
+        - Common
+      summary: Login User
+      description: Login User and returns token
+      responses:
+        '200':
+          description: Returns token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Token'
+                  meta:
+                    type: object
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+        required: true
+
+  /profile:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Common
+      summary: Get Profile
+      description: Get Profile
+      responses:
+        '200':
+          description: Get Profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Profile'
+                  meta:
+                    type: object
+
+  /update:
+    put:
+      tags:
+        - Common
+      summary: Update
+      description: Update user profile 
+      responses:
+        '201':
+          description: update user prifile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Profile'
+                  meta:
+                    type: object
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                gender:
+                  type: string
+                  enum: [male, female, other]
+                phone_number:
+                  type: string
+                permanent_address:
+                  type: string
+                temporary_address:
+                  type: string
+                pincode:
+                  type: string
+        required: true
+
+  /password/reset:
+    put:
+      tags:
+        - Common
+      summary: Re Set the Password
+      description: Re Set the Password
+      responses:
+        '200':
+          description: Return Success Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Password resetted Successfully
+                  meta:
+                    type: object
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - password
+                - confirm_password
+              properties:
+                password:
+                  type: string
+                confirm_password:
+                  type: string
+        required: true
+
+  /profile/delete:
+    delete:
+      tags:
+        - Common
+      summary: Delete user profile
+      description: Delete user profile
+      responses:
+        '200':
+          description: Returns response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Account deleted successfully
+                  meta:
+                    type: object
+
+  /logout:
+    delete:
+      tags:
+        - Common
+      summary: Logout user
+      description: Logout user
+      responses:
+        '200':
+          description: Returns response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Logged out successfully
+                  meta:
+                    type: object
+
+  /user/book:
+    get:
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/book_id'
+      summary: Get Book
+      description: Get Book
+      responses:
+        '200':
+          description: Get Book
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Book'
+                  meta:
+                    type: object
+
+  /user/books:
+    get:
+      tags:
+        - User
+      summary: List all Books
+      description: List all Books
+      responses:
+        '200':
+          description: List all Books
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Books'
+                  meta:
+                    type: object
+
+  /user/favourite/add:
+    post:
+      tags:
+        - User
+      summary: Add Book into Favoutite List
+      description: Add Book into Favoutite List
+      responses:
+        '200':
+          description: Add Book into Favoutite List
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Book added in  Favourite list
+                  meta:
+                    type: object
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - book_id
+              properties:
+                book_id:
+                  type: integer
+        required: true
+
+  /user/favourite/remove:
+    delete:
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/book_id'
+      summary: Remove Book from the Favoutite List
+      description: Remove Book from the Favoutite List
+      responses:
+        '200':
+          description: Remove Book from the Favoutite List
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Book removed from the Favourite list
+                  meta:
+                    type: object
+
+  /user/favourite/remove/all:
+    delete:
+      tags:
+        - User
+      summary: Remove all Books from the Favoutite List
+      description: Remove all Books from the Favoutite List
+      responses:
+        '200':
+          description: Remove all Books from the Favoutite List
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: All Books are removed from the Favourite list
+                  meta:
+                    type: object
+
+  /user/favourite/books:
+    get:
+      tags:
+        - User
+      summary: List all Books from the Favourite List
+      description: List all Books from the Favourite List
+      responses:
+        '200':
+          description: List all Books from the Favourite List
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Books'
+                  meta:
+                    type: object
+
+  /user/cart/add:
+    post:
+      tags:
+        - User
+      summary: Add Book into Cart List
+      description: Add Book into Cart List
+      responses:
+        '200':
+          description: Add Book into Cart List
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Book added into Carts
+                  meta:
+                    type: object
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - book_id
+              properties:
+                book_id:
+                  type: integer
+        required: true
+
+  /user/cart/remove:
+    delete:
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/book_id'
+      summary: Remove Book from the Cart
+      description: Remove Book from the Cart
+      responses:
+        '200':
+          description: Remove Book from the Cart
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Book removed from the Cart
+                  meta:
+                    type: object
+
+  /user/cart/remove/all:
+    delete:
+      tags:
+        - User
+      summary: Remove all Books from Cart
+      description: Remove all Books from Cart
+      responses:
+        '200':
+          description: Remove all Books from Cart
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: All Books are removed from Cart
+                  meta:
+                    type: object
+
+  /user/cart/books:
+    get:
+      tags:
+        - User
+      summary: List all Books from Cart
+      description: List all Books from Cart
+      responses:
+        '200':
+          description: List all Books from Cart
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Books'
+                  meta:
+                    type: object
+
+  /author/book:
+    get:
+      tags:
+        - Author
+      parameters:
+        - $ref: '#/components/parameters/book_id'
+      summary: Get Book
+      description: Get Book
+      responses:
+        '200':
+          description: Get Book
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Book'
+                  meta:
+                    type: object
+
+  /author/books:
+    get:
+      tags:
+        - Author
+      summary: List all Books of this Author
+      description: List all Books of this Author
+      responses:
+        '200':
+          description: List all Books of this Author
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Books'
+                  meta:
+                    type: object
+
+  /author/new:
+    post:
+      tags:
+        - Author
+      summary: Add new Book
+      description: Add new Book and returns Book details
+      responses:
+        '200':
+          description: Returns new Book details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Book'
+                  meta:
+                    type: object
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - amazon_url
+                - genre
+              properties:
+                title:
+                  type: string
+                amazon_url:
+                  type: string
+                genre:
+                  type: string
+        required: true
+
+  /author/delete:
+    delete:
+      tags:
+        - Author
+      parameters:
+        - $ref: '#/components/parameters/book_id'
+      summary: Delete this author book only
+      description: Delete this author book only
+      responses:
+        '200':
+          description: Delete this author book only
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Book deleted successfully
+                  meta:
+                    type: object
+
+  /author/delete/all-books:
+    delete:
+      tags:
+        - Author
+      summary: Delete this author's all books only
+      description: Delete this author's all books only
+      responses:
+        '200':
+          description: Delete this author's all books only
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: All your Books deleted successfully
+                  meta:
+                    type: object
+
+  /admin/book:
+    get:
+      tags:
+        - Admin
+      parameters:
+        - $ref: '#/components/parameters/book_id'
+      summary: Get Book
+      description: Get Book
+      responses:
+        '200':
+          description: Get Book
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Book'
+                  meta:
+                    type: object
+
+  /admin/books:
+    get:
+      tags:
+        - Admin
+      summary: List all Books
+      description: List all Books
+      responses:
+        '200':
+          description: List all Books
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Books'
+                  meta:
+                    type: object
+
+  /admin/new:
+    post:
+      tags:
+        - Admin
+      summary: Add new Book
+      description: Add new Book and returns Book details
+      responses:
+        '200':
+          description: Returns new Book details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Book'
+                  meta:
+                    type: object
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - author_id
+                - title
+                - amazon_url
+                - genre
+              properties:
+                author_id:
+                  type: integer
+                title:
+                  type: string
+                amazon_url:
+                  type: string
+                genre:
+                  type: string
+        required: true
+
+  /admin/delete/author-books:
+    delete:
+      tags:
+        - Admin
+      parameters:
+        - $ref: '#/components/parameters/author_id'
+      summary: Delete the giiven author's all books
+      description: Delete the giiven author's all books
+      responses:
+        '200':
+          description: Delete the giiven author's all books
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Books deleted successfully & The Author role is change as a USER
+                  meta:
+                    type: object
+
+  /admin/delete/all-books:
+    delete:
+      tags:
+        - Admin
+      summary: Delete all books
+      description: Delete all books
+      responses:
+        '200':
+          description: Delete all books
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: All Books are deleted successfully
+                  meta:
+                    type: object
+
+
+components:
+
+  schemas:
+
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+
+    Profile:
+      type: object
+      properties:
+        login_id:
+          type: integer
+          example: 5
+        first_name:
+          type: string
+        last_name:
+          type: string
+        gender:
+          type: string
+          enum: [male, female, other]
+        phone_number:
+          type: string
+        email:
+          type: string
+          format: email
+        permanent_address:
+          type: string
+        temporary_address:
+          type: string
+        pincode:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Book:
+      type: object
+      properties:
+        title:
+          type: string
+        amazon_url:
+          type: string
+        genre:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        author_id:
+          type: string
+        author_details:
+          $ref: '#/components/schemas/Profile'
+
+    Books:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Book'
+
+  parameters:
+    book_id:
+      name: book_id
+      in: path
+      required: true
+      description: Book Identifier
+      schema:
+        type: string
+    author_id:
+      name: author_id
+      in: path
+      required: true
+      description: Author Identifier
+      schema:
+        type: string
